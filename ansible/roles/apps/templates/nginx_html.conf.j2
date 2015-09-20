@@ -1,0 +1,35 @@
+server {
+    listen 80;
+    listen 443 ssl;
+
+    server_name {{ item.server_name }};
+    root "{{ item.doc_root }}";
+
+    index index.html index.htm;
+
+    charset utf-8;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+
+    access_log off;
+    error_log  /var/log/nginx/{{ item.server_name }}-error.log error;
+
+    error_page 404 /404.html;
+
+    error_page 500 502 503 504 /50x.html;
+        location = /50x.html {
+        root {{ item.doc_root }};
+    }
+
+    sendfile off;
+
+    location ~ /\.ht {
+        deny all;
+    }
+
+    ssl_certificate     {{ nginx.ssl_cert_path }}/{{ item.server_name }}.crt;
+    ssl_certificate_key {{ nginx.ssl_cert_path }}/{{ item.server_name }}.key;
+    ssl_protocols  TLSv1 TLSv1.1 TLSv1.2;  # don’t use SSLv3 ref: POODLE
+}

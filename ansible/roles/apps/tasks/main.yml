@@ -1,0 +1,8 @@
+---
+- include: nginx.yml
+- include: mysql.yml
+- include: postgres.yml
+- include: app_html.yml
+- include: app_php.yml
+- include: app_laravel.yml
+- include: app_rails.yml

@@ -1,0 +1,17 @@
+---
+- hosts: all
+  gather_facts: no
+  sudo: true
+  vars_files:
+    - vars/settings.yml
+  roles:
+    - vagrant_host
+    - server
+    - nginx
+    - mysql
+    - postgres
+    - redis
+    - php
+    - composer
+    - rails
+    - apps

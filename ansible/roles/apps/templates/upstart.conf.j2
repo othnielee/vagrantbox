@@ -1,0 +1,23 @@
+# {{ item.name }} App Server
+
+description "{{ item.name }} Puma app server"
+
+start on vagrant-mounted
+stop on shutdown
+
+env PATH=$PATH:/usr/local/bin:/usr/bin:/bin
+env HOME=/home/{{ vagrant_user }}
+
+respawn
+respawn limit 5 10
+
+setuid {{ vagrant_user }}
+setgid {{ vagrant_user }}
+
+chdir {{ item.app_path }}
+
+script
+  /bin/bash -l -c 'rm -f {{ rails.sockets_path }}/puma-{{ item.app_name }}.sock'
+  /bin/bash -l -c 'bundle exec puma -C {{ item.app_path }}/config/puma.rb'
+  sleep 5
+end script

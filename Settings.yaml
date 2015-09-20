@@ -1,0 +1,39 @@
+---
+hostname: devbox
+memory: 1024
+cpus: 2
+ip: 172.16.16.16
+
+folders:
+    - map: ~/dev/Projects
+      to: /home/vagrant/dev
+
+apps:
+    - type: rails
+      name: Hello World
+      server_name: hello.app
+      app_path: /home/vagrant/dev/hello
+      database:
+        type: postgres
+        name: hellodb
+        user: hellodb_user
+        password: hola
+
+mysql_root_password: t00r
+
+ports:
+    - host: 8000
+      guest: 80
+    - host: 44300
+      guest: 443
+    - host: 30000
+      guest: 3000
+    - host: 33060
+      guest: 3306
+    - host: 30505
+      guest: 22
+      id: ssh
+
+authorize: ~/.ssh/id_rsa.pub
+keys:
+    - ~/.ssh/id_rsa

@@ -1,0 +1,8 @@
+# See https://help.github.com/articles/ignoring-files for more about ignoring files.
+
+# Vagrant files
+.vagrant
+*.box
+
+# OS-specific
+.DS_Store

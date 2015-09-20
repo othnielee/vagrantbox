@@ -1,0 +1,5 @@
+---
+- name: Enable php5 mcrypt module
+  shell: php5enmod mcrypt
+  args:
+      creates: /etc/php5/cli/conf.d/20-mcrypt.ini

@@ -1,0 +1,19 @@
+---
+- name: Install rails
+  command: /bin/bash -l -c 'gem install rails --no-ri --no-rdoc'
+
+# - name: Install puma app server
+#   command: /bin/bash -l -c 'gem install puma --no-ri --no-rdoc'
+
+- name: Install mysql driver
+  command: /bin/bash -l -c 'gem install mysql2 --no-ri --no-rdoc'
+
+- name: Install postgresql driver
+  command: /bin/bash -l -c 'gem install pg --no-ri --no-rdoc'
+
+- name: Create sockets directory
+  sudo: yes
+  file:
+    path: "{{ rails.sockets_path }}"
+    state: directory
+    mode: 0777

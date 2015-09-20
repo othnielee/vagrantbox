@@ -1,0 +1,5 @@
+---
+- name: Migrate databases
+  command: php artisan migrate --env=local chdir={{ item.app_path }}
+  with_items: "{{ apps }}"
+  when: item.type == "laravel" and item.database is defined

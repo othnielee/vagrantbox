@@ -1,0 +1,22 @@
+---
+- name: Disable default nginx site
+  file: path=/etc/nginx/sites-enabled/default state=absent
+  notify: restart nginx
+
+- name: Create self-signed ssl certs
+  command: openssl req -new -nodes -x509 -subj "/C={{ ssl_cert.country }}/ST={{ ssl_cert.state }}/L={{ ssl_cert.city }}/O={{ ssl_cert.organization }}/CN={{ item.server_name }}" -days 365 -keyout {{ nginx.ssl_cert_path }}/{{ item.server_name }}.key -out {{ nginx.ssl_cert_path }}/{{ item.server_name }}.crt -extensions v3_ca creates={{ nginx.ssl_cert_path }}/{{ item.server_name }}.crt
+  with_items: "{{ apps }}"
+  when: item.type is defined
+  notify: restart nginx
+
+- name: Create nginx site configurations
+  template: src=nginx_{{ item.type }}.conf.j2 dest=/etc/nginx/sites-available/{{ item.server_name }}.conf
+  with_items: "{{ apps }}"
+  when: item.type is defined
+  notify: restart nginx
+
+- name: Symlink nginx configurations
+  file: src=/etc/nginx/sites-available/{{ item.server_name }}.conf dest=/etc/nginx/sites-enabled/{{ item.server_name }}.conf state=link
+  with_items: "{{ apps }}"
+  when: item.type is defined
+  notify: restart nginx

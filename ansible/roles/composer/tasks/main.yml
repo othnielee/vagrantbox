@@ -1,0 +1,5 @@
+- name: Get latest Composer
+  shell: curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer creates=/usr/local/bin/composer
+
+- name: Add Composer local bin to path
+  lineinfile: dest=/home/vagrant/.profile line=PATH="$PATH:/home/vagrant/.composer/vendor/bin" state=present create=yes

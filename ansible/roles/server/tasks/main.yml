@@ -1,0 +1,50 @@
+---
+- name: Update apt
+  sudo: yes
+  apt: update_cache=yes
+
+- name: Install system packages
+  sudo: yes
+  apt: pkg={{ item }} state=latest
+  with_items:
+    - curl
+    - wget
+    - nodejs
+    - npm
+    - git
+    - mcrypt
+    - python-software-properties
+    - memcached
+    - beanstalkd
+
+- name: Install node packages
+  npm: global=yes state=latest name={{ item }}
+  with_items:
+    - grunt-cli
+    - grunt
+    - bower
+    - gulp
+
+- name: Install extra packages
+  sudo: yes
+  apt: pkg={{ item }} state=latest
+  with_items: server.extra_packages
+  when: server.extra_packages is defined
+
+- name: Configure beanstalkd
+  lineinfile: dest=/etc/default/beanstalkd regexp='START=yes' line='START=yes'
+
+- name: Ensure beanstalkd is running
+  service: name=beanstalkd state=started enabled=yes
+
+- name: Configure the timezone
+  sudo: yes
+  template: src=timezone.j2 dest=/etc/timezone
+
+- name: More configure the timezone
+  sudo: yes
+  file: src=/usr/share/zoneinfo/{{ server.timezone }} dest=/etc/localtime state=link force=yes backup=yes
+
+- name: Set default system language pack
+  shell: locale-gen {{ server.locale }}
+  sudo: yes

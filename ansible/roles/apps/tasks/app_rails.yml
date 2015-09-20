@@ -1,0 +1,31 @@
+---
+- name: Install bundles
+  sudo: no
+  command: bundle install --without production --path vendor/bundle chdir={{ item.app_path }}
+  with_items: "{{ apps }}"
+  when: item.type == "rails"
+
+- name: Migrate databases
+  sudo: no
+  command: rake db:migrate RAILS_ENV={{ rails.env }} chdir={{ item.app_path }}
+  with_items: "{{ apps }}"
+  when: item.type == "rails" and item.database is defined
+
+- name: Create pids directory
+  sudo: no
+  file: path="{{ item.app_path }}/tmp/pids" state=directory mode=0755
+  with_items: "{{ apps }}"
+  when: item.type == "rails"
+  notify: restart app server
+
+- name: Configure puma
+  sudo: no
+  template: src=puma.rb.j2 dest={{ item.app_path }}/config/puma.rb
+  with_items: "{{ apps }}"
+  when: item.type == "rails"
+
+- name: Create puma upstart config
+  template: src=upstart.conf.j2 dest=/etc/init/puma-{{ item.app_name }}.conf
+  with_items: "{{ apps }}"
+  when: item.type == "rails"
+  notify: restart app server

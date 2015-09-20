@@ -1,0 +1,21 @@
+---
+- name: Add postgresql repository
+  apt_repository: repo='deb http://apt.postgresql.org/pub/repos/apt/ {{ pgsql.distro }}-pgdg main' state=present
+
+- name: Add keys for postgresql repository
+  apt_key: url=https://www.postgresql.org/media/keys/ACCC4CF8.asc state=present
+
+- name: Update apt
+  apt: update_cache=yes
+
+- name: Install postgresql packages
+  apt: pkg={{ item }} state=latest
+  with_items:
+    - postgresql
+    - postgresql-client
+    - postgresql-contrib
+    - libpq-dev
+    - python-pip
+    - python-dev
+    - python-pygresql
+    - python-psycopg2
