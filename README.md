@@ -17,14 +17,14 @@ This repo provides a template to create an Ubuntu-based development environment 
 - Composer
 
 
-## Requirements
+### Requirements
 
 - [Vagrant](http://www.vagrantup.com/downloads.html)
 - [Virtual Box](https://www.virtualbox.org/wiki/Downloads)
 - [Ansible](http://docs.ansible.com/ansible/)
 
 
-## TODO
+### TODO
 
 Outstanding items:
 
