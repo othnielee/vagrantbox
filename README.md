@@ -1,6 +1,6 @@
 # Vagrantbox
 
-This repo provides a template to create an Ubuntu-based development environment using the VirtualBox software hypervisor with orchestration by Ansible. It is primarily geared towards PHP and Rails development, but can support a range of dev needs. The box is configurable using YAML.
+This repo provides a template to create an Ubuntu-based development environment using the VirtualBox software hypervisor with orchestration by Ansible. It's geared towards building Laravel and Rails apps, but can be used for other dev projects. Multiple apps / projects are supported on a single box, and these are configurable using YAML.
 
 
 ## The Stack
@@ -28,7 +28,7 @@ This repo provides a template to create an Ubuntu-based development environment 
 
 Outstanding items:
 
-- Provide configuration documentation
+- Configuration documentation
 - Fix Puma automatic startup
 - Implement switchable dev/production deployment
 - Add Apache web server
