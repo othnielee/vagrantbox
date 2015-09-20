@@ -24,6 +24,17 @@ This repo provides a template to create an Ubuntu-based development environment 
 - [Ansible](http://docs.ansible.com/ansible/)
 
 
+## TODO
+
+Outstanding items:
+
+- Provide configuration documentation
+- Fix Puma automatic startup
+- Implement switchable dev/production deployment
+- Add Apache web server
+- Enhance app configuration options
+
+
 ### Credits
 
 The project was inspired by the excellent [Vagrant & Ansible Quickstart Tutorial](https://adamcod.es/2014/09/23/vagrant-ansible-quickstart-tutorial.html) by Adam Brett.
