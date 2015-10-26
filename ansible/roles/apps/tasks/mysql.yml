@@ -1,10 +1,10 @@
 ---
-- name: Create databases
+- name: Create mysql databases
   mysql_db: name={{ item.database.name }} state=present login_user=root login_password={{ mysql_root_password }}
   with_items: "{{ apps }}"
   when: item.database is defined and item.database.type == "mysql"
 
-- name: Create db users
+- name: Create mysql db users
   mysql_user: name={{ item.database.user }} password={{ item.database.password }} priv={{ item.database.name }}.*:ALL state=present login_user=root login_password={{ mysql_root_password }}
   with_items: "{{ apps }}"
   when: item.database is defined and item.database.type == "mysql"

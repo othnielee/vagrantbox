@@ -3,7 +3,7 @@
   sudo: yes
   apt: pkg=nginx state=latest
 
-- name: Create nginx.conf
+- name: Create config file
   template: src=nginx.conf.j2 dest=/etc/nginx/nginx.conf
   notify: restart nginx
 

@@ -28,8 +28,15 @@
     - ::1
     - localhost
 
+- name: Create dba account for external access
+  mysql_user: name=dba host='%' password={{ mysql_dba_password }} priv=*.*:ALL state=present login_user=root login_password={{ mysql_root_password }}
+
 - name: Ensure anonymous users are not in the database
   mysql_user: name='' host={{ item }} state=absent login_user=root login_password={{ mysql_root_password }}
   with_items:
     - localhost
     - "{{ current_hostname.stdout | lower }}"
+
+- name: Override network config
+  template: src=mysqld_networking.cnf.j2 dest=/etc/mysql/conf.d/mysqld_networking.cnf
+  notify: restart mysql

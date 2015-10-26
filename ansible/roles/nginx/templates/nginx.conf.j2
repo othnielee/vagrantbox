@@ -10,6 +10,16 @@ events {
 }
 
 http {
+
+  ##
+  # Longer timeouts for October CMS
+  ##
+  fastcgi_buffers 8 16k;
+  fastcgi_buffer_size 32k;
+  fastcgi_connect_timeout 300;
+  fastcgi_send_timeout 300;
+  fastcgi_read_timeout 300;
+
   sendfile on;
   tcp_nopush on;
   tcp_nodelay on;

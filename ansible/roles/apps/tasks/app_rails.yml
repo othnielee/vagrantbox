@@ -5,11 +5,11 @@
   with_items: "{{ apps }}"
   when: item.type == "rails"
 
-- name: Migrate databases
+- name: Migrate rails databases
   sudo: no
   command: rake db:migrate RAILS_ENV={{ rails.env }} chdir={{ item.app_path }}
   with_items: "{{ apps }}"
-  when: item.type == "rails" and item.database is defined
+  when: item.type == "rails" and item.database is defined and item.database.migrate == "yes"
 
 - name: Create pids directory
   sudo: no

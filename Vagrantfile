@@ -109,7 +109,8 @@ Vagrant.configure("2") do |config|
           ansible.extra_vars = {
             hostname: hostname,
             apps: settings["apps"] ||= nil,
-            mysql_root_password: settings["mysql_root_password"] ||= "vagrant"
+            mysql_root_password: settings["mysql_admin_passwords"]["root"] ||= "vagrant",
+            mysql_dba_password: settings["mysql_admin_passwords"]["dba"] ||= "vagrant"
           }
       end
   end

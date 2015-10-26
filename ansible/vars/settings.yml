@@ -2,13 +2,13 @@
 server:
   timezone: America/New_York
   locale: en_US.UTF-8
-  extra_packages: [imagemagick]
+  extra_packages: [imagemagick,libgmp-dev]
 
 ssl_cert:
   country: US
   state: Florida
   city: Miami
-  organization: DevOrg
+  organization: SAHLT
 
 vagrant_user: vagrant
 
