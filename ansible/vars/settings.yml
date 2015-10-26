@@ -8,7 +8,7 @@ ssl_cert:
   country: US
   state: Florida
   city: Miami
-  organization: SAHLT
+  organization: DevOrg
 
 vagrant_user: vagrant
 
