@@ -30,7 +30,7 @@ ports:
     guest: 443
   - host: 33000
     guest: 3000
-  - host: 33060
+  - host: 33306
     guest: 3306
   - host: 30022
     guest: 22
