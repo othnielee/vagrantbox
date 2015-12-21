@@ -9,7 +9,7 @@
   sudo: no
   command: rake db:migrate RAILS_ENV={{ rails.env }} chdir={{ item.app_path }}
   with_items: "{{ apps }}"
-  when: item.type == "rails" and item.database is defined and item.database.migrate == "yes"
+  when: item.type == "rails" and item.database is defined and item.database.migrate == true
 
 - name: Create pids directory
   sudo: no
