@@ -1,0 +1,19 @@
+---
+- name: Install node system packages
+  apt: pkg={{ item }} state=latest
+  with_items:
+    - nodejs
+    - npm
+    - libnotify-bin
+
+- name: Symlink nodejs
+  file: src=/usr/bin/nodejs dest=/usr/bin/node state=link
+
+- name: Install and update npm packages
+  command: npm -g install {{ item }}
+  with_items:
+    - npm
+    - bower
+    - grunt-cli
+    - grunt-init
+    - gulp-cli

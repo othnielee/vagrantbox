@@ -1,7 +1,7 @@
 ---
 - name: Checking Redis installation
   shell: 'test -f {{ redis_path }}/bin/redis-cli && echo "yes" || echo "no"'
-  changed_when: False
+  changed_when: false
   register: installed_status
 
 - name: Get redis installed version

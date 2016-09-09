@@ -1,14 +1,14 @@
 ---
 - name: Create postgres databases
-  sudo: yes
-  sudo_user: postgres
+  become: true
+  become_user: postgres
   postgresql_db: name={{ item.database.name }} state=present
-  with_items: "{{ apps }}"
-  when: item.database is defined and item.database.type == "postgres"
+  with_items: '{{ apps }}'
+  when: item.database is defined and item.database.type == 'postgres'
 
 - name: Create postgress db users
-  sudo: yes
-  sudo_user: postgres
+  become: true
+  become_user: postgres
   postgresql_user: name={{ item.database.user }} password={{ item.database.password }} db={{ item.database.name }} priv=ALL
-  with_items: "{{ apps }}"
-  when: item.database is defined and item.database.type == "postgres"
+  with_items: '{{ apps }}'
+  when: item.database is defined and item.database.type == 'postgres'

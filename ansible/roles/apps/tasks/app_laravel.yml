@@ -1,5 +1,59 @@
 ---
-- name: Migrate laravel databases
-  command: php artisan migrate --env=local chdir={{ item.app_path }}
-  with_items: "{{ apps }}"
-  when: item.type == "laravel" and item.database is defined and item.database.migrate == true
+- name: 'Laravel : Update composer'
+  command: composer self-update chdir={{ item.app_path }}
+  with_items: '{{ apps }}'
+  when: item.type == 'laravel'
+
+- name: 'Laravel : Install composer packages'
+  become: false
+  command: composer install chdir={{ item.app_path }}
+  with_items: '{{ apps }}'
+  when: item.type == 'laravel' and item.install_dependencies is defined and item.install_dependencies.composer == true
+
+- name: 'Laravel : Clear compiled classes'
+  become: false
+  command: php artisan clear-compiled chdir={{ item.app_path }}
+  with_items: '{{ apps }}'
+  when: item.type == 'laravel'
+
+- name: 'Laravel : Update and optimize the autoloader'
+  become: false
+  command: composer dump-autoload --optimize chdir={{ item.app_path }}
+  with_items: '{{ apps }}'
+  when: item.type == 'laravel'
+
+# We ignore errors for npm, bower, grunt and gulp because we can't guarantee
+# that we'll find the manifest files in the places that we expect them
+- name: 'Laravel : Install npm packages'
+  become: false
+  ignore_errors: true
+  command: npm install chdir={{ item.app_path }}
+  with_items: '{{ apps }}'
+  when: item.type == 'laravel' and item.install_dependencies is defined and item.install_dependencies.npm == true
+
+- name: 'Laravel : Install bower packages'
+  become: false
+  ignore_errors: true
+  command: bower install chdir={{ item.app_path }}
+  with_items: '{{ apps }}'
+  when: item.type == 'laravel' and item.install_dependencies is defined and item.install_dependencies.bower == true
+
+- name: 'Laravel : Run grunt tasks'
+  become: false
+  ignore_errors: true
+  command: grunt chdir={{ item.app_path }}
+  with_items: '{{ apps }}'
+  when: item.type == 'laravel' and item.install_dependencies is defined and item.install_dependencies.grunt == true
+
+- name: 'Laravel : Run gulp tasks'
+  become: false
+  ignore_errors: true
+  command: gulp chdir={{ item.app_path }}
+  with_items: '{{ apps }}'
+  when: item.type == 'laravel' and item.install_dependencies is defined and item.install_dependencies.gulp == true
+
+- name: 'Laravel : Migrate databases'
+  become: false
+  command: php artisan migrate:refresh --seed --env=local chdir={{ item.app_path }}
+  with_items: '{{ apps }}'
+  when: item.type == 'laravel' and item.database is defined and item.database.migrate == true

@@ -1,15 +1,15 @@
 # Vagrantbox
 
-This repo provides a template to create an Ubuntu-based development environment using the VirtualBox software hypervisor with orchestration by Ansible. It's geared towards building Laravel and Rails apps, but can be used for other dev projects. Multiple apps / projects are supported on a single box, and these are configurable using YAML.
+This repo provides a template to create an Ubuntu-based development environment using the VirtualBox software hypervisor, with orchestration by Ansible. It's geared towards building Laravel and Rails apps, but can be used for other dev projects. Multiple apps / projects are supported on a single box, and these are configurable using YAML.
 
 
 ## The Stack
-- Ubuntu 14.04 LTS
+- Ubuntu 16.04 LTS
 - Nginx
 - MySQL
 - PostgreSQL
 - Redis
-- PHP
+- PHP 7.0
 - Ruby on Rails
 - Puma
 - Node
@@ -19,7 +19,7 @@ This repo provides a template to create an Ubuntu-based development environment 
 
 ### Requirements
 
-- [Vagrant](http://www.vagrantup.com/downloads.html)
+- [Vagrant](https://www.vagrantup.com/downloads.html)
 - [Virtual Box](https://www.virtualbox.org/wiki/Downloads)
 - [Ansible](http://docs.ansible.com/ansible/)
 
@@ -31,7 +31,6 @@ Outstanding items:
 - Configuration documentation
 - Fix Puma automatic startup
 - Implement switchable dev/production deployment
-- Add Apache web server
 - Enhance app configuration options
 
 
@@ -41,7 +40,7 @@ The project was inspired by the excellent [Vagrant & Ansible Quickstart Tutorial
 
 It is based on work done in the following projects:
 
-- [Laravel Homestead](http://laravel.com/docs/5.1/homestead "Laravel Homestead")
+- [Laravel Homestead](https://laravel.com/docs/5.3/Homestead "Laravel Homestead")
 - [railsbox](https://railsbox.io/ "railsbox")
 - [phansible](http://phansible.com/ "phansible")
 - [Scotch Box](https://box.scotch.io/ "Scotch Box")

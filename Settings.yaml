@@ -6,17 +6,32 @@ ip: 172.16.16.16
 
 folders:
   - map: ~/dev/projects
-    to: /home/vagrant/dev
+    to: /home/ubuntu/dev
 
 apps:
+  - type: laravel
+    server_name: hello-laravel.app
+    app_path: /home/ubuntu/dev/hello-laravel
+    install_dependencies:
+      composer: true
+      npm: true
+      bower: true
+      grunt: true
+      gulp: true
+    database:
+      type: mysql
+      name: hellolardb
+      user: hellolardb_user
+      password: hola
+      migrate: true
   - type: rails
-    name: Hello World
-    server_name: hello.app
-    app_path: /home/vagrant/dev/hello
+    name: Hello Rails
+    server_name: hello-rails.app
+    app_path: /home/ubuntu/dev/hello-rails
     database:
       type: postgres
-      name: hellodb
-      user: hellodb_user
+      name: hellorlsdb
+      user: hellorlsdb_user
       password: hola
 
 mysql_admin_passwords:

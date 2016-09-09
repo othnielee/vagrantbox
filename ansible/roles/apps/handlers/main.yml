@@ -4,5 +4,5 @@
 
 - name: restart app server
   service: name=puma-{{ item.app_name }} state=restarted
-  with_items: "{{ apps }}"
-  when: item.type == "rails"
+  with_items: '{{ apps }}'
+  when: item.type == 'rails'

@@ -7,11 +7,15 @@ settings = YAML.load_file("Settings.yaml")
 
 ansiblePlaybook = "ansible/playbook.yml"
 
+# To be able to set hostname on Ubuntu 16.04, we need Vagrant ver 1.8.3
+# or greater. Also see https://github.com/mitchellh/vagrant/issues/7288
+Vagrant.require_version ">= 1.8.3"
+
 Vagrant.configure("2") do |config|
 
-  # set auto_update to false, to skip the
-  # correct additions version when booting
-  config.vbguest.auto_update = false
+  # Set auto_update to true, to ensure
+  # we get the latest Guest Additions
+  config.vbguest.auto_update = true
 
   # Set the hostname
   hostname = settings["hostname"] ||= "vagrantbox"
@@ -20,8 +24,8 @@ Vagrant.configure("2") do |config|
   config.ssh.shell = "bash -c 'BASH_ENV=/etc/profile exec bash'"
 
   # Get the box
-  config.vm.box = "ubuntu/trusty64"
-  config.vm.box_url = "https://vagrantcloud.com/ubuntu/boxes/trusty64/versions/14.04/providers/virtualbox.box"
+  config.vm.box = "ubuntu/xenial64"
+  # config.vm.box_url = "http://cloud-images.ubuntu.com/xenial/current/xenial-server-cloudimg-amd64-vagrant.box"
 
   # Configure the hostname
   config.vm.hostname = hostname
@@ -32,11 +36,11 @@ Vagrant.configure("2") do |config|
   # Configure VirtualBox settings
   config.vm.provider "virtualbox" do |vb|
     vb.name = hostname
+    vb.customize ["modifyvm", :id, "--ostype", "Ubuntu_64"]
     vb.customize ["modifyvm", :id, "--memory", settings["memory"] ||= "1024"]
     vb.customize ["modifyvm", :id, "--cpus", settings["cpus"] ||= "2"]
     vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
     vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
-    vb.customize ["modifyvm", :id, "--ostype", "Ubuntu_64"]
   end
 
   # Configure port forwarding
@@ -56,7 +60,7 @@ Vagrant.configure("2") do |config|
   # Configure public key for SSH access
   if settings.include? 'authorize'
     config.vm.provision "shell" do |s|
-      s.inline = "echo $1 | grep -xq \"$1\" /home/vagrant/.ssh/authorized_keys || echo $1 | tee -a /home/vagrant/.ssh/authorized_keys"
+      s.inline = "echo $1 | grep -xq \"$1\" /home/ubuntu/.ssh/authorized_keys || echo \"\n$1\" | tee -a /home/ubuntu/.ssh/authorized_keys"
       s.args = [File.read(File.expand_path(settings["authorize"]))]
     end
   end
@@ -66,14 +70,16 @@ Vagrant.configure("2") do |config|
     settings["keys"].each do |key|
       config.vm.provision "shell" do |s|
         s.privileged = false
-        s.inline = "echo \"$1\" > /home/vagrant/.ssh/$2 && chmod 600 /home/vagrant/.ssh/$2"
+        s.inline = "echo \"$1\" > /home/ubuntu/.ssh/$2 && chmod 600 /home/ubuntu/.ssh/$2"
         s.args = [File.read(File.expand_path(key)), key.split('/').last]
       end
     end
   end
 
-  # Disable the default Vagrant folder mapping
-  config.vm.synced_folder ".", "/vagrant", disabled: true
+  # Disable the default Vagrant folder mapping.
+  # This doesn't apply to ubuntu/xenial64, which
+  # uses 'ubuntu' as the default account
+  #config.vm.synced_folder ".", "/vagrant", disabled: true
 
   # Configure synced folder mappings
   if settings.include? 'folders'
@@ -91,28 +97,36 @@ Vagrant.configure("2") do |config|
   # App settings pre-processing
   if settings.include? 'apps'
     settings["apps"].each do |app|
+
       # Format app names
       if app.has_key?("name")
         app["app_name"] = (app["name"].gsub(" ", "-") || app["name"]).downcase
       end
+
       # Set doc root
       if app.has_key?("app_path") && !app.has_key?("doc_root")
-        app["doc_root"] = app["app_path"] + "/public"
+        if (app["type"] == "laravel" || app["type"] == "rails")
+          app.store("doc_root", app["app_path"] + "/public")
+        else
+          app.store("doc_root", app["app_path"])
+        end
       end
+
     end
   end
 
   # Use Ansible automation
   if File.exists? ansiblePlaybook then
-      config.vm.provision :ansible do |ansible|
-          ansible.playbook = ansiblePlaybook
-          ansible.extra_vars = {
-            hostname: hostname,
-            apps: settings["apps"] ||= nil,
-            mysql_root_password: settings["mysql_admin_passwords"]["root"] ||= "vagrant",
-            mysql_dba_password: settings["mysql_admin_passwords"]["dba"] ||= "vagrant"
-          }
-      end
+    config.vm.provision :ansible do |ansible|
+      config.ssh.username = "ubuntu"
+      ansible.playbook = ansiblePlaybook
+      ansible.extra_vars = {
+        hostname: hostname,
+        apps: settings["apps"] ||= nil,
+        mysql_root_password: settings["mysql_admin_passwords"]["root"] ||= "vagrant",
+        mysql_dba_password: settings["mysql_admin_passwords"]["dba"] ||= "vagrant"
+      }
+    end
   end
 
 end

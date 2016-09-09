@@ -1,0 +1,5 @@
+---
+
+composer_temp_download_path: '/tmp'
+
+composer_install_path: '/usr/local/bin'

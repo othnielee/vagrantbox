@@ -1,0 +1,22 @@
+- name: 'Lumen: Update composer'
+  command: composer self-update chdir={{ item.app_path }}
+  with_items: '{{ apps }}'
+  when: item.type == 'lumen'
+
+- name: 'Lumen: Install composer packages'
+  become: false
+  command: composer install chdir={{ item.app_path }}
+  with_items: '{{ apps }}'
+  when: item.type == 'lumen' and item.install_dependencies is defined and item.install_dependencies.composer == true
+
+- name: 'Lumen: Update and optimize the autoloader'
+  become: false
+  command: composer dump-autoload --optimize chdir={{ item.app_path }}
+  with_items: '{{ apps }}'
+  when: item.type == 'lumen'
+
+- name: 'Lumen: Migrate databases'
+  become: false
+  command: php artisan migrate:refresh --seed --env=local chdir={{ item.app_path }}
+  with_items: '{{ apps }}'
+  when: item.type == 'lumen' and item.database is defined and item.database.migrate == true

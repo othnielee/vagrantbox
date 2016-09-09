@@ -10,16 +10,13 @@ ssl_cert:
   city: Miami
   organization: DevOrg
 
-vagrant_user: vagrant
+vagrant_user: ubuntu
 
 nginx:
   ssl_cert_path: /etc/nginx/ssl
 
-php:
-  ppa: php5-5.6
-
 pgsql:
-  distro: trusty
+  distro: xenial
 
 rails:
   env: development

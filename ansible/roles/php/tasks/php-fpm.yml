@@ -1,25 +1,29 @@
 ---
 - name: Set permissions on socket - owner
-  lineinfile: "dest=/etc/php5/fpm/pool.d/www.conf state=present regexp='^;?listen.owner' line='listen.owner = {{ vagrant_user }}'"
+  lineinfile: "dest=/etc/php/7.0/fpm/pool.d/www.conf state=present regexp='^;?listen.owner' line='listen.owner = {{ vagrant_user }}'"
 
 - name: Set permissions on socket - group
-  lineinfile: "dest=/etc/php5/fpm/pool.d/www.conf state=present regexp='^;?listen.group' line='listen.group = {{ vagrant_user }}'"
+  lineinfile: "dest=/etc/php/7.0/fpm/pool.d/www.conf state=present regexp='^;?listen.group' line='listen.group = {{ vagrant_user }}'"
 
 - name: Set permissions on socket - mode
-  lineinfile: "dest=/etc/php5/fpm/pool.d/www.conf state=present regexp='^;?listen.mode' line='listen.mode = 0666'"
+  lineinfile: "dest=/etc/php/7.0/fpm/pool.d/www.conf state=present regexp='^;?listen.mode' line='listen.mode = 0666'"
 
 - name: Set user for processes
-  replace: "dest=/etc/php5/fpm/pool.d/www.conf regexp='www-data' replace='{{ vagrant_user }}'"
+  replace: "dest=/etc/php/7.0/fpm/pool.d/www.conf regexp='www-data' replace='{{ vagrant_user }}'"
 
-- name: ensure timezone is set in fpm php.ini
-  lineinfile: dest=/etc/php5/fpm/php.ini
+- name: Ensure timezone is set in fpm php.ini
+  lineinfile: dest=/etc/php/7.0/fpm/php.ini
               regexp='date.timezone ='
               line='date.timezone = {{ server.timezone }}'
+              state=present
+              backrefs=yes
 
-- name: enabling opcache
-  lineinfile: dest=/etc/php5/fpm/php.ini
+- name: Enable opcache
+  lineinfile: dest=/etc/php/7.0/fpm/php.ini
               regexp=';?opcache.enable=\d'
               line='opcache.enable=1'
+              state=present
+              backrefs=yes
 
-- name: restart php5-fpm
-  service: name=php5-fpm enabled=yes state=restarted
+- name: Restart php7.0-fpm
+  service: name=php7.0-fpm enabled=yes state=restarted

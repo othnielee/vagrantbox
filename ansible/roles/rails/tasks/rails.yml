@@ -12,8 +12,7 @@
   command: /bin/bash -l -c 'gem install pg --no-ri --no-rdoc'
 
 - name: Create sockets directory
-  sudo: yes
   file:
-    path: "{{ rails.sockets_path }}"
+    path: '{{ rails.sockets_path }}'
     state: directory
     mode: 0777

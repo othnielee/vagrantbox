@@ -5,4 +5,5 @@
 - include: app_html.yml
 - include: app_php.yml
 - include: app_laravel.yml
+- include: app_lumen.yml
 - include: app_rails.yml

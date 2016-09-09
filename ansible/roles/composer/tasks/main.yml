@@ -1,5 +1,18 @@
-- name: Get latest Composer
-  shell: curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer creates=/usr/local/bin/composer
+- name: Download composer
+  get_url:
+    url: https://getcomposer.org/installer
+    dest: '{{ composer_temp_download_path }}/composer-setup.php'
+
+- name: Install composer
+  shell: php '{{ composer_temp_download_path }}/composer-setup.php' -- --install-dir={{ composer_install_path }} --filename=composer
+  # args:
+  #   creates: /usr/local/bin/composer
+
+- name: Make composer executable
+  file:
+    path: '{{ composer_install_path }}/composer'
+    mode: a+x
+    state: file
 
 - name: Add Composer local bin to path
-  lineinfile: dest=/home/vagrant/.profile line=PATH="$PATH:/home/vagrant/.composer/vendor/bin" state=present create=yes
+  lineinfile: dest=/home/{{ vagrant_user }}/.profile line=PATH="$PATH:/home/{{ vagrant_user }}/.composer/vendor/bin" state=present create=yes
